@@ -22,16 +22,18 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       
       # Configuração do banco de dados e migrações
-      - name: Setup Database
+      - name: Reset and Apply Migrations
         run: |
-          python manage.py migrate --fake auth zero
-          python manage.py migrate --fake admin zero
-          python manage.py migrate --fake contenttypes zero
-          python manage.py migrate --fake sessions zero
-          python manage.py makemigrations usuarios
+          # Limpa migrações anteriores
+          find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+          find . -path "*/migrations/*.pyc" -delete
+          
+          # Cria novas migrações
           python manage.py makemigrations livros
+          python manage.py makemigrations usuarios
           python manage.py makemigrations
-          python manage.py migrate --fake-initial
+          
+          # Aplica migrações
           python manage.py migrate
       
       # Passo original do autograding
