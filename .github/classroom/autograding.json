@@ -16,7 +16,7 @@
     },
     {
       "name": "1.3 - Teste View Listar Livros",
-      "setup": "export DJANGO_SETTINGS_MODULE=yourproject.settings_test && python manage.py migrate",
+      "setup": "export DJANGO_SETTINGS_MODULE=biblioteca.settings_test && python manage.py migrate",
       "run": "python manage.py shell -c \"from django.test import Client; print('OK' if Client().get('/livros/', HTTP_HOST='localhost').status_code == 200 else 'ERRO')\"",
       "output": "OK",
       "timeout": 15,
