@@ -55,3 +55,9 @@ jobs:
       - name: Run Django Tests
         run: |
           python manage.py test
+      - name: Debug Login
+        run: |
+          python manage.py shell -c "
+          from usuarios.models import Usuario
+          print('Usuários existentes:', list(Usuario.objects.values_list('username', flat=True)))
+          "
