@@ -1,6 +1,10 @@
-<!-- livros/templates/livros.html -->
-<ul>
+<!DOCTYPE html>
+<html>
+<body>
+    <ul>
     {% for livro in livros %}
-        <li>{{ livro.titulo }} - {{ livro.autor }} ({{ livro.paginas }} págs)</li>
+        <li>{{ livro.titulo }}</li>
     {% endfor %}
     </ul>
+</body>
+</html>
