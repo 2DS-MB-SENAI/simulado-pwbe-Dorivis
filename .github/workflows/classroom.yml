@@ -50,14 +50,16 @@ jobs:
       # Passo original do autograding
       - name: Run Autograding
         uses: education/autograding@v1
-      
-      # Testes Django adicionais
-      - name: Run Django Tests
-        run: |
-          python manage.py test
+        
       - name: Debug Login
         run: |
           python manage.py shell -c "
           from usuarios.models import Usuario
           print('Usuários existentes:', list(Usuario.objects.values_list('username', flat=True)))
           "
+      
+      # Testes Django adicionais
+      - name: Run Django Tests
+        run: |
+          python manage.py test
+      
