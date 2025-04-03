@@ -31,14 +31,15 @@
 
     {
       "name": "2.1 - Teste GET /api/livros/",
-      "run": "python manage.py shell -c \"import requests; print('OK' if requests.get('http://localhost:8000/api/livros/').status_code == 200 else 'ERRO')\"",
+      "setup": "python manage.py migrate && python manage.py shell -c \"from livros.models import Livro; Livro.objects.create(titulo='Teste', autor='Autor', paginas=100)\"",
+      "run": "python manage.py shell -c \"from django.test import Client; print('OK' if Client().get('/api/livros/').status_code == 200 else 'ERRO')\"",
       "output": "OK",
       "timeout": 10,
       "points": 15
     },
     {
       "name": "2.2 - Teste POST /api/livros/",
-      "run": "python manage.py shell -c \"import requests; r = requests.post('http://localhost:8000/api/livros/', json={'titulo':'API Test','autor':'Test','paginas':50}); print('OK' if r.status_code in [200,201] else 'ERRO')\"",
+      "run": "python manage.py shell -c \"from django.test import Client; c = Client(); r = c.post('/api/livros/', {'titulo':'API Test','autor':'Test','paginas':50}, content_type='application/json'); print('OK' if r.status_code in [200,201] else 'ERRO')\"",
       "output": "OK",
       "timeout": 15,
       "points": 15
@@ -51,7 +52,6 @@
       "points": 10
     },
 
-
     {
       "name": "3.1 - Teste Model Usuario",
       "run": "python manage.py shell -c \"from usuarios.models import Usuario; u = Usuario(username='test', telefone='+5511999999999'); u.set_password('test123'); u.full_clean(); print('OK')\"",
@@ -61,14 +61,16 @@
     },
     {
       "name": "3.2 - Teste Registro",
-      "run": "python manage.py shell -c \"import requests; r = requests.post('http://localhost:8000/auth/registro/', json={'username':'test2','password':'test123','telefone':'+5511888888888'}); print('OK' if r.status_code == 201 else 'ERRO')\"",
+      "setup": "python manage.py migrate",
+      "run": "python manage.py shell -c \"from django.test import Client; c = Client(); r = c.post('/auth/registro/', {'username':'test2','password':'test123','telefone':'+5511888888888'}, content_type='application/json'); print('OK' if r.status_code == 201 else f'ERRO: {r.status_code}')\"",
       "output": "OK",
       "timeout": 15,
       "points": 10
     },
     {
       "name": "3.3 - Teste Login JWT",
-      "run": "python manage.py shell -c \"import requests; r = requests.post('http://localhost:8000/auth/login/', json={'username':'test2','password':'test123'}); print('OK' if r.status_code == 200 and 'access' in r.json() else 'ERRO')\"",
+      "setup": "python manage.py shell -c \"from usuarios.models import Usuario; Usuario.objects.create_user(username='test2', password='test123', telefone='+5511888888888')\"",
+      "run": "python manage.py shell -c \"from django.test import Client; c = Client(); r = c.post('/auth/login/', {'username':'test2','password':'test123'}, content_type='application/json'); print('OK' if r.status_code == 200 and 'access' in r.json() else 'ERRO')\"",
       "output": "OK",
       "timeout": 15,
       "points": 10
