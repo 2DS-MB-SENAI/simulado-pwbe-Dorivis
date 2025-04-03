@@ -28,12 +28,23 @@ jobs:
           find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
           find . -path "*/migrations/*.pyc" -delete
           
-          # Cria novas migrações
-          python manage.py makemigrations livros
-          python manage.py makemigrations usuarios
+          # Função para rodar makemigrations apenas se o app existir
+          check_and_migrate() {
+            if [ -d "*/$1/migrations" ]; then
+              echo "Running makemigrations for $1"
+              python manage.py makemigrations $1
+            else
+              echo "App $1 not found, skipping..."
+            fi
+          }
+          
+          # Cria novas migrações apenas se os apps existirem
+          check_and_migrate livros
+          check_and_migrate usuarios
           python manage.py makemigrations
           
           # Aplica migrações
+          rm -f db.sqlite3
           python manage.py migrate
       
       # Passo original do autograding
