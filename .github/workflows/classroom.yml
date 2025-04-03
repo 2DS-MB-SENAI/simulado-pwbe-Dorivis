@@ -25,7 +25,6 @@ jobs:
       - name: Setup Database
         run: |
           python manage.py makemigrations usuarios
-          python manage.py makemigrations livros
           python manage.py makemigrations
           python manage.py migrate
       
