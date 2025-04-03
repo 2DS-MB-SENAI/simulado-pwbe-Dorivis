@@ -28,6 +28,7 @@ jobs:
           find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
           find . -path "*/migrations/*.pyc" -delete
           
+          rm db.sqlite3
           # Cria novas migrações
           python manage.py makemigrations livros
           python manage.py makemigrations usuarios
