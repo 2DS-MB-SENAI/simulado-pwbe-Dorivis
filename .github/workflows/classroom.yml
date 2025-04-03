@@ -17,16 +17,23 @@ jobs:
       # Instalação de dependências
       - name: Install dependencies
         run: |
+          pip install --upgrade pip
           pip install django djangorestframework djangorestframework-simplejwt
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      
+      # Configuração do banco de dados e migrações
+      - name: Setup Database
+        run: |
+          python manage.py makemigrations usuarios
+          python manage.py makemigrations livros
+          python manage.py makemigrations
+          python manage.py migrate
       
       # Passo original do autograding
       - name: Run Autograding
         uses: education/autograding@v1
       
-      # Novos testes Django (opcional)
+      # Testes Django adicionais
       - name: Run Django Tests
         run: |
-          python manage.py makemigrations
-          python manage.py migrate
           python manage.py test
